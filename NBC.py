@@ -40,8 +40,15 @@ def discrete_classifier(data,labels,test_data,test_labels):
 
 	for i in range(10):
 		for j in range(28*28):
+			min = 33
 			for k in range(32):
-				liklihood[i][j][k] = liklihood[i][j][k] / data_digit_count[i]
+				if liklihood[i][j][k] != 0 and liklihood[i][j][k] < min:
+					min = liklihood[i][j][k]
+			for k in range(32):
+				if liklihood[i][j][k] == 0:
+					liklihood[i][j][k] = min/ data_digit_count[i]
+				else:
+					liklihood[i][j][k] = liklihood[i][j][k] / data_digit_count[i]
 	
 	error = 0
 	for i in range(test_data.shape[0]):
@@ -52,8 +59,8 @@ def discrete_classifier(data,labels,test_data,test_labels):
 			count = 0
 			for idx1 in range(test_data.shape[1]):
 				for idx2 in range(test_data.shape[2]):
-					if liklihood[j][count][test_data[i][idx1][idx2]] > 0:
-						posterior = posterior + math.log(liklihood[j][count][test_data[i][idx1][idx2]])
+					#if liklihood[j][count][test_data[i][idx1][idx2]] > 0:
+					posterior = posterior + math.log(liklihood[j][count][test_data[i][idx1][idx2]])
 					count = count + 1
 			if prob_digit[j] > 0:
 				posterior = posterior + math.log(prob_digit[j])
